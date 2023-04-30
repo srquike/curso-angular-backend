@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.API", "CursoAngular.API\CursoAngular.API.csproj", "{DD38F768-DD09-4F39-B292-B2E78558F759}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoAngular.API", "CursoAngular.API\CursoAngular.API.csproj", "{DD38F768-DD09-4F39-B292-B2E78558F759}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.DAL", "CursoAngular.DAL\CursoAngular.DAL.csproj", "{53D29B15-2FAE-4155-B8DE-8DE1FC2DC580}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.BOL", "CursoAngular.BOL\CursoAngular.BOL.csproj", "{16887C89-2F29-463D-BBFD-7E6B3944F9D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.BLL", "CursoAngular.BLL\CursoAngular.BLL.csproj", "{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.Repository", "CursoAngular.Repository\CursoAngular.Repository.csproj", "{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,22 @@ Global
 		{DD38F768-DD09-4F39-B292-B2E78558F759}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD38F768-DD09-4F39-B292-B2E78558F759}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD38F768-DD09-4F39-B292-B2E78558F759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53D29B15-2FAE-4155-B8DE-8DE1FC2DC580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53D29B15-2FAE-4155-B8DE-8DE1FC2DC580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53D29B15-2FAE-4155-B8DE-8DE1FC2DC580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53D29B15-2FAE-4155-B8DE-8DE1FC2DC580}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16887C89-2F29-463D-BBFD-7E6B3944F9D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16887C89-2F29-463D-BBFD-7E6B3944F9D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16887C89-2F29-463D-BBFD-7E6B3944F9D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16887C89-2F29-463D-BBFD-7E6B3944F9D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
