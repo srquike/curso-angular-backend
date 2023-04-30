@@ -1,4 +1,7 @@
 
+using CursoAngular.DAL;
+using Microsoft.EntityFrameworkCore;
+
 namespace CursoAngular.API
 {
     public class Program
@@ -13,6 +16,9 @@ namespace CursoAngular.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<CursoAngularDbContext>(options => options
+                .EnableSensitiveDataLogging()
+                .UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider => provider.EnableRetryOnFailure()));
 
             var app = builder.Build();
 
