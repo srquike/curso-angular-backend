@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CursoAngular.BOL\CursoAngular.BOL.csproj" />
+    <ProjectReference Include="..\CursoAngular.Repository\CursoAngular.Repository.csproj" />
+    <ProjectReference Include="..\CursoAngular.UOW\CursoAngular.UOW.csproj" />
   </ItemGroup>
 
 </Project>
