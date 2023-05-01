@@ -1,5 +1,7 @@
 
 using CursoAngular.DAL;
+using CursoAngular.DAL.UnitOfWork;
+using CursoAngular.UOW;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursoAngular.API
@@ -19,6 +21,8 @@ namespace CursoAngular.API
             builder.Services.AddDbContext<CursoAngularDbContext>(options => options
                 .EnableSensitiveDataLogging()
                 .UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider => provider.EnableRetryOnFailure()));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 
