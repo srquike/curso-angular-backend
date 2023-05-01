@@ -22,6 +22,7 @@ namespace CursoAngular.API
                 .EnableSensitiveDataLogging()
                 .UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider => provider.EnableRetryOnFailure()));
 
+            builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
