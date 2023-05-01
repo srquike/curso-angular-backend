@@ -5,13 +5,13 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoAngular.API", "CursoAngular.API\CursoAngular.API.csproj", "{DD38F768-DD09-4F39-B292-B2E78558F759}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.DAL", "CursoAngular.DAL\CursoAngular.DAL.csproj", "{53D29B15-2FAE-4155-B8DE-8DE1FC2DC580}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoAngular.DAL", "CursoAngular.DAL\CursoAngular.DAL.csproj", "{53D29B15-2FAE-4155-B8DE-8DE1FC2DC580}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.BOL", "CursoAngular.BOL\CursoAngular.BOL.csproj", "{16887C89-2F29-463D-BBFD-7E6B3944F9D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoAngular.BOL", "CursoAngular.BOL\CursoAngular.BOL.csproj", "{16887C89-2F29-463D-BBFD-7E6B3944F9D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.BLL", "CursoAngular.BLL\CursoAngular.BLL.csproj", "{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoAngular.Repository", "CursoAngular.Repository\CursoAngular.Repository.csproj", "{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursoAngular.Repository", "CursoAngular.Repository\CursoAngular.Repository.csproj", "{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CursoAngular.UOW", "CursoAngular.UOW\CursoAngular.UOW.csproj", "{752C4B85-A3D8-4460-8EFD-FE772A1E989A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +31,14 @@ Global
 		{16887C89-2F29-463D-BBFD-7E6B3944F9D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16887C89-2F29-463D-BBFD-7E6B3944F9D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16887C89-2F29-463D-BBFD-7E6B3944F9D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCFB281A-A5F5-4C3A-8FEE-856F64335AB7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30402D2A-A28B-4AAD-881E-7EFA68C8AE28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{752C4B85-A3D8-4460-8EFD-FE772A1E989A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{752C4B85-A3D8-4460-8EFD-FE772A1E989A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{752C4B85-A3D8-4460-8EFD-FE772A1E989A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{752C4B85-A3D8-4460-8EFD-FE772A1E989A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
