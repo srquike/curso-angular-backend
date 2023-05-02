@@ -19,7 +19,7 @@ public class CursoAngularDbContext : DbContext
         {
             entity.ToTable("Cinemas");
 
-            entity.HasKey(e => e.CinemaId);
+            entity.HasKey(e => e.Id);
 
             entity.Property(e => e.Name)
                 .HasColumnType("varchar(50)");
@@ -35,7 +35,7 @@ public class CursoAngularDbContext : DbContext
         {
             entity.ToTable("Movies");
 
-            entity.HasKey(e => e.MovieId);
+            entity.HasKey(e => e.Id);
 
             entity.Property(e => e.Title)
                 .HasColumnType("varchar(100)");
@@ -59,7 +59,7 @@ public class CursoAngularDbContext : DbContext
         {
             entity.ToTable("Genres");
 
-            entity.HasKey(e => e.GenreId);
+            entity.HasKey(e => e.Id);
 
             entity.Property(e => e.Name)
                 .HasColumnType("varchar(50)");
@@ -69,7 +69,7 @@ public class CursoAngularDbContext : DbContext
         {
             entity.ToTable("Stars");
 
-            entity.HasKey(e => e.StarId);
+            entity.HasKey(e => e.Id);
 
             entity.Property(e => e.Name)
                 .HasColumnType("varchar(50)");
