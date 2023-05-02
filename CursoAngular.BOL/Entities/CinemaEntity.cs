@@ -1,7 +1,8 @@
-﻿namespace CursoAngular.BOL;
-public class CinemaEntity
+﻿using CursoAngular.BOL.Entities;
+
+namespace CursoAngular.BOL;
+public class CinemaEntity : BaseEntity
 {
-    public int CinemaId { get; set; }
     public string? Name { get; set; }
     public string? Location { get; set; }
 

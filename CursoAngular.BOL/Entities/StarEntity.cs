@@ -1,7 +1,8 @@
-﻿namespace CursoAngular.BOL;
-public class StarEntity
+﻿using CursoAngular.BOL.Entities;
+
+namespace CursoAngular.BOL;
+public class StarEntity : BaseEntity
 {
-    public int StarId { get; set; }
     public string? Name { get; set; }
     public DateTime? DateOfBirth { get; set; }
     public string? PhotographyURL { get; set; }
