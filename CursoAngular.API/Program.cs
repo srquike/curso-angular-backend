@@ -1,4 +1,3 @@
-
 using CursoAngular.API.Filters;
 using CursoAngular.DAL;
 using CursoAngular.DAL.UnitOfWork;
@@ -15,6 +14,15 @@ namespace CursoAngular.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(corsbuilder =>
+                {
+                    corsbuilder.WithOrigins(builder.Configuration.GetValue<string>("Clients"))
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
             builder.Services.AddControllers(options =>
             {
@@ -23,9 +31,13 @@ namespace CursoAngular.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<CursoAngularDbContext>(options => options
-                .EnableSensitiveDataLogging()
-                .UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider => provider.EnableRetryOnFailure()));
+            builder.Services.AddDbContext<CursoAngularDbContext>(options =>
+            {
+                options.EnableSensitiveDataLogging().UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider =>
+                {
+                    provider.EnableRetryOnFailure();
+                });
+            });
 
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -40,6 +52,8 @@ namespace CursoAngular.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseAuthentication();
 
