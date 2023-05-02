@@ -24,11 +24,11 @@ namespace CursoAngular.DAL.Migrations
 
             modelBuilder.Entity("CursoAngular.BOL.CinemaEntity", b =>
                 {
-                    b.Property<int>("CinemaId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CinemaId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Location")
                         .HasColumnType("varchar(MAX)");
@@ -36,34 +36,34 @@ namespace CursoAngular.DAL.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("CinemaId");
+                    b.HasKey("Id");
 
                     b.ToTable("Cinemas", (string)null);
                 });
 
             modelBuilder.Entity("CursoAngular.BOL.GenreEntity", b =>
                 {
-                    b.Property<int>("GenreId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GenreId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("varchar(50)");
 
-                    b.HasKey("GenreId");
+                    b.HasKey("Id");
 
                     b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("CursoAngular.BOL.MovieEntity", b =>
                 {
-                    b.Property<int>("MovieId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("MpaaRating")
                         .HasColumnType("varchar(50)");
@@ -80,18 +80,18 @@ namespace CursoAngular.DAL.Migrations
                     b.Property<string>("TrailerUrl")
                         .HasColumnType("varchar(max)");
 
-                    b.HasKey("MovieId");
+                    b.HasKey("Id");
 
                     b.ToTable("Movies", (string)null);
                 });
 
             modelBuilder.Entity("CursoAngular.BOL.StarEntity", b =>
                 {
-                    b.Property<int>("StarId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StarId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -102,52 +102,52 @@ namespace CursoAngular.DAL.Migrations
                     b.Property<string>("PhotographyURL")
                         .HasColumnType("varchar(max)");
 
-                    b.HasKey("StarId");
+                    b.HasKey("Id");
 
                     b.ToTable("Stars", (string)null);
                 });
 
             modelBuilder.Entity("GenresMovies", b =>
                 {
-                    b.Property<int>("GenresGenreId")
+                    b.Property<int>("GenresId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MoviesMovieId")
+                    b.Property<int>("MoviesId")
                         .HasColumnType("int");
 
-                    b.HasKey("GenresGenreId", "MoviesMovieId");
+                    b.HasKey("GenresId", "MoviesId");
 
-                    b.HasIndex("MoviesMovieId");
+                    b.HasIndex("MoviesId");
 
                     b.ToTable("GenresMovies");
                 });
 
             modelBuilder.Entity("MoviesCinemas", b =>
                 {
-                    b.Property<int>("CinemasCinemaId")
+                    b.Property<int>("CinemasId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MoviesMovieId")
+                    b.Property<int>("MoviesId")
                         .HasColumnType("int");
 
-                    b.HasKey("CinemasCinemaId", "MoviesMovieId");
+                    b.HasKey("CinemasId", "MoviesId");
 
-                    b.HasIndex("MoviesMovieId");
+                    b.HasIndex("MoviesId");
 
                     b.ToTable("MoviesCinemas");
                 });
 
             modelBuilder.Entity("StarsMovies", b =>
                 {
-                    b.Property<int>("CastStarId")
+                    b.Property<int>("CastId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MoviesMovieId")
+                    b.Property<int>("MoviesId")
                         .HasColumnType("int");
 
-                    b.HasKey("CastStarId", "MoviesMovieId");
+                    b.HasKey("CastId", "MoviesId");
 
-                    b.HasIndex("MoviesMovieId");
+                    b.HasIndex("MoviesId");
 
                     b.ToTable("StarsMovies");
                 });
@@ -156,13 +156,13 @@ namespace CursoAngular.DAL.Migrations
                 {
                     b.HasOne("CursoAngular.BOL.GenreEntity", null)
                         .WithMany()
-                        .HasForeignKey("GenresGenreId")
+                        .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CursoAngular.BOL.MovieEntity", null)
                         .WithMany()
-                        .HasForeignKey("MoviesMovieId")
+                        .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -171,13 +171,13 @@ namespace CursoAngular.DAL.Migrations
                 {
                     b.HasOne("CursoAngular.BOL.CinemaEntity", null)
                         .WithMany()
-                        .HasForeignKey("CinemasCinemaId")
+                        .HasForeignKey("CinemasId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CursoAngular.BOL.MovieEntity", null)
                         .WithMany()
-                        .HasForeignKey("MoviesMovieId")
+                        .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -186,13 +186,13 @@ namespace CursoAngular.DAL.Migrations
                 {
                     b.HasOne("CursoAngular.BOL.StarEntity", null)
                         .WithMany()
-                        .HasForeignKey("CastStarId")
+                        .HasForeignKey("CastId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CursoAngular.BOL.MovieEntity", null)
                         .WithMany()
-                        .HasForeignKey("MoviesMovieId")
+                        .HasForeignKey("MoviesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
