@@ -1,7 +1,9 @@
 
+using CursoAngular.API.Filters;
 using CursoAngular.DAL;
 using CursoAngular.DAL.UnitOfWork;
 using CursoAngular.UOW;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursoAngular.API
@@ -13,8 +15,11 @@ namespace CursoAngular.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
-            builder.Services.AddControllers();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add(typeof(ExceptionLoggerFilter));
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -36,8 +41,9 @@ namespace CursoAngular.API
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
