@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CursoAngular.BOL;
-using CursoAngular.BOL.DTOs;
+using CursoAngular.API.DTO;
 using CursoAngular.UOW;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -28,23 +28,7 @@ namespace CursoAngular.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<MovieDTO>>> Get()
         {
-            try
-            {
-                var movies = await _unitOfWork.Repository<MovieEntity>().Get();
-
-                if (movies.Count <= 0)
-                {
-                    return NoContent();
-                }
-
-                var result = _mapper.Map<List<MovieDTO>>(movies);
-
-                return result;
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            throw new NotImplementedException();
         }
 
         // GET api/<MoviesController>/5
