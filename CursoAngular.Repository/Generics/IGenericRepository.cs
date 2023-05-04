@@ -1,4 +1,6 @@
-﻿namespace CursoAngular.Repository;
+﻿using System.Linq.Expressions;
+
+namespace CursoAngular.Repository;
 public interface IGenericRepository<TEntity>
 {
     void Create(TEntity entity);
@@ -6,6 +8,7 @@ public interface IGenericRepository<TEntity>
     void Delete(int entityId);
     void Delete(TEntity entity);
     Task<TEntity> GetById(int entityId);
-    Task<IReadOnlyList<TEntity>> Get();
     Task<bool> Exists(int entityId);
+    Task<List<TEntity>> Get<TKey>(int skipCount, int takeCount, Expression<Func<TEntity, TKey>> orderBy);
+    Task<int> GetCount();
 }
