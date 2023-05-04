@@ -1,6 +1,7 @@
 ﻿using CursoAngular.BOL.Entities;
 using CursoAngular.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CursoAngular.DAL.Repositories.Generics
 {
@@ -8,7 +9,6 @@ namespace CursoAngular.DAL.Repositories.Generics
     {
         private readonly CursoAngularDbContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
-        private readonly string _idPropertyName;
 
         public GenericRepository(CursoAngularDbContext dbContext)
         {
@@ -41,21 +41,29 @@ namespace CursoAngular.DAL.Repositories.Generics
             _dbSet.Remove(entity);
         }
 
-        public async Task<bool> Exists(int entityId)
+        public async Task<List<TEntity>> Get<TKey>(int skipCount, int takeCount, Expression<Func<TEntity, TKey>> orderBy)
         {
-            var entity = await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id.Equals(entityId));
-
-            return entity != null;
-        }
-
-        public async Task<IReadOnlyList<TEntity>> Get()
-        {
-            return await _dbSet.AsNoTracking().ToListAsync();
+            return await _dbSet
+                .AsNoTracking()
+                .OrderBy(orderBy)
+                .Skip(skipCount)
+                .Take(takeCount)
+                .ToListAsync();
         }
 
         public async Task<TEntity> GetById(int entityId)
         {
             return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id.Equals(entityId));
+        }
+
+        public async Task<int> GetCount()
+        {
+            return await _dbSet.AsNoTracking().CountAsync();
+        }
+
+        public async Task<bool> Exists(int entityId)
+        {
+            return await _dbSet.AsNoTracking().AnyAsync(e => e.Id.Equals(entityId));
         }
 
         public void Update(TEntity entity)
