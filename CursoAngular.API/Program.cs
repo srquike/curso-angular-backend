@@ -20,7 +20,8 @@ namespace CursoAngular.API
                 {
                     corsbuilder.WithOrigins(builder.Configuration.GetValue<string>("Clients"))
                         .AllowAnyMethod()
-                        .AllowAnyHeader();
+                        .AllowAnyHeader()
+                        .WithExposedHeaders(new string[] { "itemsCount" });
                 });
             });
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
