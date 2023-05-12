@@ -1,9 +1,15 @@
+using AutoMapper;
 using CursoAngular.API.Filters;
+using CursoAngular.API.Mapper.Profiles;
 using CursoAngular.DAL;
+using CursoAngular.DAL.Repositories.Files;
 using CursoAngular.DAL.UnitOfWork;
+using CursoAngular.Repository.Files;
 using CursoAngular.UOW;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace CursoAngular.API
 {
@@ -37,11 +43,28 @@ namespace CursoAngular.API
                 options.EnableSensitiveDataLogging().UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider =>
                 {
                     provider.EnableRetryOnFailure();
+                    provider.UseNetTopologySuite();
                 });
             });
+            builder.Services.AddSingleton(NtsGeometryServices.Instance.CreateGeometryFactory(4326));
 
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddTransient<IFilesStorageRepository, FilesStorageRepository>(_ =>
+            {
+                return new FilesStorageRepository(builder.Configuration["ConnectionStrings:AzureBlobStorage"]);
+            });
+            builder.Services.AddSingleton(provider =>
+
+                new MapperConfiguration(configuration =>
+                {
+                    var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                    configuration.AddProfile(new CinemasProfiles(geometryFactory));
+                    configuration.AddProfile(new GenresProfiles());
+                    configuration.AddProfile(new StarsProfiles());
+                    configuration.AddProfile(new MoviesProfiles());
+                }).CreateMapper()
+            );
 
             var app = builder.Build();
 

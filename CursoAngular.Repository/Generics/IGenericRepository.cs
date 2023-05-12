@@ -11,4 +11,5 @@ public interface IGenericRepository<TEntity>
     Task<bool> Exists(int entityId);
     Task<List<TEntity>> Get<TKey>(int skipCount, int takeCount, Expression<Func<TEntity, TKey>> orderBy);
     Task<int> GetCount();
+    Task<List<TEntity>> Get<TKey>(Expression<Func<TEntity, TKey>> orderBy);
 }

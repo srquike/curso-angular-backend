@@ -51,6 +51,14 @@ namespace CursoAngular.DAL.Repositories.Generics
                 .ToListAsync();
         }
 
+        public async Task<List<TEntity>> Get<TKey>(Expression<Func<TEntity, TKey>> orderBy)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .OrderBy(orderBy)
+                .ToListAsync();
+        }
+
         public async Task<TEntity> GetById(int entityId)
         {
             return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id.Equals(entityId));

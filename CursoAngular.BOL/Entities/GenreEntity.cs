@@ -6,4 +6,5 @@ public class GenreEntity : BaseEntity
     public string? Name { get; set; }
 
     public virtual ICollection<MovieEntity> Movies { get; set; } = new List<MovieEntity>();
+    public virtual ICollection<GenreMovieEntity> GenreMovies { get; set; } = new List<GenreMovieEntity>();
 }

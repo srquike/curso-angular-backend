@@ -1,4 +1,5 @@
 ﻿using CursoAngular.BOL;
+using CursoAngular.BOL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursoAngular.DAL;
@@ -24,11 +25,17 @@ public class CursoAngularDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasColumnType("varchar(50)");
             entity.Property(e => e.Location)
-                .HasColumnType("varchar(MAX)");
+                .HasColumnType("geography");
+
+            //entity.HasMany(p => p.MovieCinemas).WithOne(b => b.Cinema)
+            //    .;
 
             entity.HasMany(c => c.Movies)
                 .WithMany(m => m.Cinemas)
-                .UsingEntity("MoviesCinemas");
+                .UsingEntity<MovieCinemaEntity>(
+                    "MoviesCinemas",
+                    l => l.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId),
+                    r => r.HasOne<CinemaEntity>().WithMany().HasForeignKey(e => e.CinemaId));
         });
 
         modelBuilder.Entity<MovieEntity>(entity =>
@@ -49,10 +56,17 @@ public class CursoAngularDbContext : DbContext
 
             entity.HasMany(m => m.Cast)
                 .WithMany(s => s.Movies)
-                .UsingEntity("StarsMovies");
+                .UsingEntity<StarMovieEntity>(
+                    "StarsMovies",
+                    l => l.HasOne<StarEntity>().WithMany().HasForeignKey(e => e.StarId),
+                    r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
+
             entity.HasMany(m => m.Genres)
                 .WithMany(g => g.Movies)
-                .UsingEntity("GenresMovies");
+                .UsingEntity<GenreMovieEntity>(
+                    "GenresMovies",
+                    l => l.HasOne<GenreEntity>().WithMany().HasForeignKey(e => e.GenreId),
+                    r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
         });
 
         modelBuilder.Entity<GenreEntity>(entity =>

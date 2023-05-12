@@ -1,4 +1,7 @@
-﻿namespace CursoAngular.API.DTO
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace CursoAngular.API.DTO.Movies
 {
     public class MovieDTO
     {

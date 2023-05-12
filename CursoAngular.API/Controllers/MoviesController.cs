@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using CursoAngular.BOL;
-using CursoAngular.API.DTO;
 using CursoAngular.UOW;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CursoAngular.Repository.Files;
+using CursoAngular.API.DTO.Movies;
+using CursoAngular.API.DTO.Cinemas;
+using CursoAngular.API.DTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,19 +20,22 @@ namespace CursoAngular.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IFilesStorageRepository _filesStorage;
+        private const string MOVIES_CONTAINER_NAME = "movies";
 
-        public MoviesController(IMapper mapper, IUnitOfWork unitOfWork)
+        public MoviesController(IMapper mapper, IUnitOfWork unitOfWork, IFilesStorageRepository filesStorage)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _filesStorage = filesStorage;
         }
 
         // GET: api/<MoviesController>
-        [HttpGet]
-        public async Task<ActionResult<List<MovieDTO>>> Get()
-        {
-            throw new NotImplementedException();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<List<MovieDTO>>> Get()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         // GET api/<MoviesController>/5
         [HttpGet("{id}")]
@@ -53,23 +59,44 @@ namespace CursoAngular.API.Controllers
             }
         }
 
+        [HttpGet("resources")]
+        public async Task<ActionResult<MovieResourcesDTO>> GetResources()
+        {
+            var cinemas = await _unitOfWork.Repository<CinemaEntity>().Get(x => x.Name);
+            var genres = await _unitOfWork.Repository<GenreEntity>().Get(x => x.Name);
+
+            var result = new MovieResourcesDTO()
+            {
+                Cinemas = _mapper.Map<List<IndexCinemasDTO>>(cinemas),
+                Genres = _mapper.Map<List<GenreDTO>>(genres)
+            };
+
+            return result;
+        }
+
         // POST api/<MoviesController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] MovieDTO movie)
+        public async Task<IActionResult> Post([FromForm] FormMoviesDTO movie)
         {
             try
             {
                 var result = _mapper.Map<MovieEntity>(movie);
+
+                if (movie.PosterFile != null)
+                {
+                    result.PosterUrl = await _filesStorage.UploadFileAsync(MOVIES_CONTAINER_NAME, movie.PosterFile.OpenReadStream(), movie.PosterFile.FileName);
+                }
+
                 _unitOfWork.Repository<MovieEntity>().Create(result);
 
                 if (await _unitOfWork.SaveChangesAsync())
                 {
-                    return CreatedAtAction(nameof(Get), new { id = result.Id }, new { id = result.Id});
+                    return CreatedAtAction(nameof(Get), new { id = result.Id }, new { id = result.Id });
                 }
 
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest();
             }

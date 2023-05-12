@@ -11,10 +11,10 @@ namespace CursoAngular.API.Filters
             _logger = logger;
         }
 
-        public override Task OnExceptionAsync(ExceptionContext context)
+        public override void OnException(ExceptionContext context)
         {
             _logger.LogError(context.Exception, context.Exception.Message);
-            return base.OnExceptionAsync(context);
+            base.OnException(context);
         }
     }
 }

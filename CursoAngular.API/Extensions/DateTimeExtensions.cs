@@ -2,11 +2,11 @@
 {
     public static class DateTimeExtensions
     {
-        public static string ToDateTimeString(this DateTime? dateTime)
+        public static string ToDateString(this DateTime? dateTime)
         {
             if (dateTime != null)
             {
-                return dateTime.Value.ToShortDateString();
+                return dateTime.Value.ToString("MMMM dd, yyyy");
             }
 
             return string.Empty;
