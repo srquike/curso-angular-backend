@@ -9,6 +9,9 @@ public class CursoAngularDbContext : DbContext
     public virtual DbSet<MovieEntity> Movies { get; set; }
     public virtual DbSet<GenreEntity> Genres { get; set; }
     public virtual DbSet<StarEntity> Stars { get; set; }
+    public virtual DbSet<StarMovieEntity> StarMovies { get; set; }
+    public virtual DbSet<GenreMovieEntity> GenreMovies { get; set; }
+    public virtual DbSet<MovieCinemaEntity> MovieCinemas { get; set; }
 
     public CursoAngularDbContext(DbContextOptions<CursoAngularDbContext> options) : base(options) { }
 
@@ -27,15 +30,16 @@ public class CursoAngularDbContext : DbContext
             entity.Property(e => e.Location)
                 .HasColumnType("geography");
 
-            //entity.HasMany(p => p.MovieCinemas).WithOne(b => b.Cinema)
-            //    .;
+            entity.HasMany(d => d.MovieCinemas).WithOne(p => p.Cinema)
+                .HasForeignKey(p => p.CinemaId)
+                .HasConstraintName("FK_Cinemas_MoviesCinemas_CinemaId");
 
-            entity.HasMany(c => c.Movies)
-                .WithMany(m => m.Cinemas)
-                .UsingEntity<MovieCinemaEntity>(
-                    "MoviesCinemas",
-                    l => l.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId),
-                    r => r.HasOne<CinemaEntity>().WithMany().HasForeignKey(e => e.CinemaId));
+            //entity.HasMany(c => c.Movies)
+            //    .WithMany(m => m.Cinemas)
+            //    .UsingEntity<MovieCinemaEntity>(
+            //        "MoviesCinemas",
+            //        l => l.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId),
+            //        r => r.HasOne<CinemaEntity>().WithMany().HasForeignKey(e => e.CinemaId));
         });
 
         modelBuilder.Entity<MovieEntity>(entity =>
@@ -54,19 +58,31 @@ public class CursoAngularDbContext : DbContext
             entity.Property(e => e.MpaaRating)
                 .HasColumnType("varchar(50)");
 
-            entity.HasMany(m => m.Cast)
-                .WithMany(s => s.Movies)
-                .UsingEntity<StarMovieEntity>(
-                    "StarsMovies",
-                    l => l.HasOne<StarEntity>().WithMany().HasForeignKey(e => e.StarId),
-                    r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
+            entity.HasMany(p => p.StarMovies).WithOne(d => d.Movie)
+                .HasForeignKey(d => d.MovieId)
+                .HasConstraintName("FK_Movies_StarsMovies_MovieId");
 
-            entity.HasMany(m => m.Genres)
-                .WithMany(g => g.Movies)
-                .UsingEntity<GenreMovieEntity>(
-                    "GenresMovies",
-                    l => l.HasOne<GenreEntity>().WithMany().HasForeignKey(e => e.GenreId),
-                    r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
+            entity.HasMany(p => p.GenreMovies).WithOne(d => d.Movie)
+                .HasForeignKey(d => d.MovieId)
+                .HasConstraintName("FK_Movies_GenresMovies_MovieId");
+            
+            entity.HasMany(p => p.CinemaMovies).WithOne(d => d.Movie)
+                .HasForeignKey(d => d.MovieId)
+                .HasConstraintName("FK_Movies_MoviesCinemas_MovieId");
+
+            //entity.HasMany(m => m.Cast)
+            //    .WithMany(s => s.Movies)
+            //    .UsingEntity<StarMovieEntity>(
+            //        "StarsMovies",
+            //        l => l.HasOne<StarEntity>().WithMany().HasForeignKey(e => e.StarId),
+            //        r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
+
+            //entity.HasMany(m => m.Genres)
+            //    .WithMany(g => g.Movies)
+            //    .UsingEntity<GenreMovieEntity>(
+            //        "GenresMovies",
+            //        l => l.HasOne<GenreEntity>().WithMany().HasForeignKey(e => e.GenreId),
+            //        r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
         });
 
         modelBuilder.Entity<GenreEntity>(entity =>
@@ -77,6 +93,10 @@ public class CursoAngularDbContext : DbContext
 
             entity.Property(e => e.Name)
                 .HasColumnType("varchar(50)");
+
+            entity.HasMany(p => p.GenreMovies).WithOne(d => d.Genre)
+                .HasForeignKey(d => d.GenreId)
+                .HasConstraintName("FK_Genres_GenresMovies_GenreId");
         });
 
         modelBuilder.Entity<StarEntity>(entity =>
@@ -90,6 +110,10 @@ public class CursoAngularDbContext : DbContext
             entity.Property(e => e.DateOfBirth);
             entity.Property(e => e.PhotographyURL)
                 .HasColumnType("varchar(max)");
+
+            entity.HasMany(p => p.StarMovies).WithOne(d => d.Star)
+                .HasForeignKey(d => d.StarId)
+                .HasConstraintName("FK_Stars_StarsMovies_StarId");
         });
     }
 }
