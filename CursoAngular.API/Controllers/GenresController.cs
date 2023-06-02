@@ -27,7 +27,7 @@ namespace CursoAngular.API.Controllers
         {
             try
             {
-                var genres = await _unitOfWork.Repository<GenreEntity>().Get(pagination.GetSkipCount(), pagination.ItemsToDisplay, g => g.Name);
+                var genres = await _unitOfWork.Repository<GenreEntity>().Order(x => x.Name).Skip(pagination.GetSkipCount()).Take(pagination.ItemsToDisplay).Get();
 
                 if (genres.Count <= 0)
                 {
@@ -53,7 +53,7 @@ namespace CursoAngular.API.Controllers
         {
             try
             {
-                var genre = await _unitOfWork.Repository<GenreEntity>().GetById(id);
+                var genre = await _unitOfWork.Repository<GenreEntity>().Get(id);
 
                 if (genre == null)
                 {

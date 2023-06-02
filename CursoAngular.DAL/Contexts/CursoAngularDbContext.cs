@@ -9,7 +9,7 @@ public class CursoAngularDbContext : DbContext
     public virtual DbSet<MovieEntity> Movies { get; set; }
     public virtual DbSet<GenreEntity> Genres { get; set; }
     public virtual DbSet<StarEntity> Stars { get; set; }
-    public virtual DbSet<StarMovieEntity> StarMovies { get; set; }
+    public virtual DbSet<CastEntity> Cast { get; set; }
     public virtual DbSet<GenreMovieEntity> GenreMovies { get; set; }
     public virtual DbSet<MovieCinemaEntity> MovieCinemas { get; set; }
 
@@ -58,7 +58,7 @@ public class CursoAngularDbContext : DbContext
             entity.Property(e => e.MpaaRating)
                 .HasColumnType("varchar(50)");
 
-            entity.HasMany(p => p.StarMovies).WithOne(d => d.Movie)
+            entity.HasMany(p => p.Casting).WithOne(d => d.Movie)
                 .HasForeignKey(d => d.MovieId)
                 .HasConstraintName("FK_Movies_StarsMovies_MovieId");
 
@@ -69,20 +69,6 @@ public class CursoAngularDbContext : DbContext
             entity.HasMany(p => p.CinemaMovies).WithOne(d => d.Movie)
                 .HasForeignKey(d => d.MovieId)
                 .HasConstraintName("FK_Movies_MoviesCinemas_MovieId");
-
-            //entity.HasMany(m => m.Cast)
-            //    .WithMany(s => s.Movies)
-            //    .UsingEntity<StarMovieEntity>(
-            //        "StarsMovies",
-            //        l => l.HasOne<StarEntity>().WithMany().HasForeignKey(e => e.StarId),
-            //        r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
-
-            //entity.HasMany(m => m.Genres)
-            //    .WithMany(g => g.Movies)
-            //    .UsingEntity<GenreMovieEntity>(
-            //        "GenresMovies",
-            //        l => l.HasOne<GenreEntity>().WithMany().HasForeignKey(e => e.GenreId),
-            //        r => r.HasOne<MovieEntity>().WithMany().HasForeignKey(e => e.MovieId));
         });
 
         modelBuilder.Entity<GenreEntity>(entity =>

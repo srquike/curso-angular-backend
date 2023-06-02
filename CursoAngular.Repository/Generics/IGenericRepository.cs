@@ -7,9 +7,12 @@ public interface IGenericRepository<TEntity>
     void Update(TEntity entity);
     void Delete(int entityId);
     void Delete(TEntity entity);
-    Task<TEntity> GetById(int entityId);
+    Task<TEntity> Get(int entityId);
     Task<bool> Exists(int entityId);
-    Task<List<TEntity>> Get<TKey>(int skipCount, int takeCount, Expression<Func<TEntity, TKey>> orderBy);
     Task<int> GetCount();
-    Task<List<TEntity>> Get<TKey>(Expression<Func<TEntity, TKey>> orderBy);
+    Task<List<TEntity>> Get();
+    IGenericRepository<TEntity> Filter(Expression<Func<TEntity, bool>> expression);
+    IGenericRepository<TEntity> Order<TKey>(Expression<Func<TEntity, TKey>> expression);
+    IGenericRepository<TEntity> Take(int count);
+    IGenericRepository<TEntity> Skip(int count);
 }

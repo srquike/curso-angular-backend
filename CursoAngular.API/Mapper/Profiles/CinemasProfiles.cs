@@ -14,6 +14,10 @@ namespace CursoAngular.API.Mapper.Profiles
                 .ForMember(d => d.Latitude, options => options.MapFrom(s => s.Location.Y))
                 .ForMember(d => d.Longitude, options => options.MapFrom(s => s.Location.X));
 
+            CreateMap<CinemaEntity, CinemaDTO>()
+                .ForMember(d => d.Latitude, options => options.MapFrom(s => s.Location.Y))
+                .ForMember(d => d.Longitude, options => options.MapFrom(s => s.Location.X));
+
             CreateMap<CinemaEntity, IndexCinemasDTO>();
 
             // DTO to Entity

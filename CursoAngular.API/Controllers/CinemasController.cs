@@ -29,7 +29,7 @@ namespace CursoAngular.API.Controllers
         {
             try
             {
-                var cinemas = await _unitOfWork.Repository<CinemaEntity>().Get(pagination.GetSkipCount(), pagination.ItemsToDisplay, e => e.Name);
+                var cinemas = await _unitOfWork.Repository<CinemaEntity>().Order(x => x.Name).Skip(pagination.GetSkipCount()).Take(pagination.ItemsToDisplay).Get();
 
                 if (cinemas.Count <= 0)
                 {

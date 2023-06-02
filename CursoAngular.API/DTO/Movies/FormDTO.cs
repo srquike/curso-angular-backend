@@ -6,11 +6,8 @@ using CursoAngular.API.DTO.StarsMovies;
 
 namespace CursoAngular.API.DTO.Movies
 {
-    public class FormMoviesDTO
+    public class FormDTO
     {
-        [DisplayName("Título")]
-        [Required(ErrorMessage = "El {0} de la movie es requerido")]
-        [StringLength(maximumLength: 10, ErrorMessage = "El {0} de la movie debe tener máximo 10 caracteres")]
         public string? Title { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public IFormFile? PosterFile { get; set; }
@@ -20,10 +17,10 @@ namespace CursoAngular.API.DTO.Movies
         [ModelBinder(BinderType = typeof(CustomModelBinder<List<FormStarsMoviesDTO>?>))]
         public List<FormStarsMoviesDTO>? Cast { get; set; }
 
-        [ModelBinder(BinderType = typeof(CustomModelBinder<int[]?>))]
-        public int[]? Genres { get; set; }
+        [ModelBinder(BinderType = typeof(CustomModelBinder<List<int>?>))]
+        public List<int>? Genres { get; set; }
 
-        [ModelBinder(BinderType = typeof(CustomModelBinder<int[]?>))]
-        public int[]? Cinemas { get; set; }
+        [ModelBinder(BinderType = typeof(CustomModelBinder<List<int>?>))]
+        public List<int>? Cinemas { get; set; }
     }
 }

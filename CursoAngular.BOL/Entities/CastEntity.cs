@@ -1,6 +1,6 @@
 ﻿namespace CursoAngular.BOL.Entities
 {
-    public class StarMovieEntity : BaseEntity
+    public class CastEntity : BaseEntity
     {
         public int StarId { get; set; }
         public int MovieId { get; set; }

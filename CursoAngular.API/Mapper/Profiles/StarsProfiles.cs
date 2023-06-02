@@ -10,9 +10,12 @@ namespace CursoAngular.API.Mapper.Profiles
         public StarsProfiles()
         {
             // Entity to DTO
-            CreateMap<StarEntity, StarDTO>();
+            CreateMap<StarEntity, StarDTO>()
+                .ForMember(d => d.Photography, options => options.MapFrom(s => s.PhotographyURL));
             CreateMap<StarEntity, IndexStarDTO>()
                 .ForMember(d => d.DateOfBirth, options => options.MapFrom(s => s.DateOfBirth.ToDateString()));
+            CreateMap<StarEntity, SearchStarDTO>()
+                .ForMember(d => d.Photography, options => options.MapFrom(s => s.PhotographyURL));
 
             // DTO to Entity
             CreateMap<StarDTO, StarEntity>();

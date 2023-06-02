@@ -5,6 +5,7 @@ namespace CursoAngular.API.Bindings
 {
     public class CustomModelBinder<T> : IModelBinder
     {
+
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             var propertyName = bindingContext.ModelName;
@@ -17,11 +18,11 @@ namespace CursoAngular.API.Bindings
 
             try
             {
-                var deserializedValue = JsonConvert.DeserializeObject(value.FirstValue);
+                var deserializedValue = JsonConvert.DeserializeObject<T>(value.FirstValue);
 
                 bindingContext.Result = ModelBindingResult.Success(deserializedValue);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 bindingContext.ModelState.TryAddModelError(propertyName, $"The type {typeof(T)} is not valid for {propertyName} property.");
             }

@@ -7,5 +7,5 @@ public class StarEntity : BaseEntity
     public DateTime? DateOfBirth { get; set; }
     public string? PhotographyURL { get; set; }
 
-    public virtual ICollection<StarMovieEntity> StarMovies { get; set; } = new List<StarMovieEntity>();
+    public virtual ICollection<CastEntity> StarMovies { get; set; } = new List<CastEntity>();
 }

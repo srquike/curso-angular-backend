@@ -4,6 +4,7 @@ using CursoAngular.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace CursoAngular.DAL.Migrations
 {
     [DbContext(typeof(CursoAngularDbContext))]
-    partial class CursoAngularDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230521015516_ChangeStarsMoviesTableName")]
+    partial class ChangeStarsMoviesTableName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,7 +71,7 @@ namespace CursoAngular.DAL.Migrations
 
                     b.HasIndex("StarId");
 
-                    b.ToTable("Cast", (string)null);
+                    b.ToTable("Cast");
                 });
 
             modelBuilder.Entity("CursoAngular.BOL.Entities.GenreMovieEntity", b =>
@@ -91,7 +94,7 @@ namespace CursoAngular.DAL.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("GenreMovies", (string)null);
+                    b.ToTable("GenreMovies");
                 });
 
             modelBuilder.Entity("CursoAngular.BOL.Entities.MovieCinemaEntity", b =>
@@ -114,7 +117,7 @@ namespace CursoAngular.DAL.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("MovieCinemas", (string)null);
+                    b.ToTable("MovieCinemas");
                 });
 
             modelBuilder.Entity("CursoAngular.BOL.GenreEntity", b =>

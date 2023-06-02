@@ -1,5 +1,9 @@
 ﻿using CursoAngular.DAL.Repositories.Generics;
+using CursoAngular.DAL.Repositories.Movies;
+using CursoAngular.DAL.Repositories.Stars;
 using CursoAngular.Repository;
+using CursoAngular.Repository.Movies;
+using CursoAngular.Repository.Stars;
 using CursoAngular.UOW;
 using System.Collections;
 
@@ -8,8 +12,15 @@ namespace CursoAngular.DAL.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly CursoAngularDbContext _dbContext;
-        private Hashtable _repositories;
+
+        private IStarsRepository? _starsRepository;
+        private IMoviesRespository? _moviesRespository;
+
+        private Hashtable? _repositories;
         private bool _dbContextDisposed;
+
+        public IStarsRepository StarsRepository => _starsRepository ??= new StarsRepository(_dbContext);
+        public IMoviesRespository MoviesRespository => _moviesRespository ??= new MoviesRepository(_dbContext);
 
         public UnitOfWork(CursoAngularDbContext dbContext)
         {

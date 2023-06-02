@@ -9,11 +9,13 @@ namespace CursoAngular.DAL.Repositories.Generics
     {
         private readonly CursoAngularDbContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
+        private IQueryable<TEntity> _entities;
 
         public GenericRepository(CursoAngularDbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<TEntity>();
+            _entities = _dbSet.AsNoTracking();
         }
 
         public void Create(TEntity entity)
@@ -41,25 +43,7 @@ namespace CursoAngular.DAL.Repositories.Generics
             _dbSet.Remove(entity);
         }
 
-        public async Task<List<TEntity>> Get<TKey>(int skipCount, int takeCount, Expression<Func<TEntity, TKey>> orderBy)
-        {
-            return await _dbSet
-                .AsNoTracking()
-                .OrderBy(orderBy)
-                .Skip(skipCount)
-                .Take(takeCount)
-                .ToListAsync();
-        }
-
-        public async Task<List<TEntity>> Get<TKey>(Expression<Func<TEntity, TKey>> orderBy)
-        {
-            return await _dbSet
-                .AsNoTracking()
-                .OrderBy(orderBy)
-                .ToListAsync();
-        }
-
-        public async Task<TEntity> GetById(int entityId)
+        public async Task<TEntity> Get(int entityId)
         {
             return await _dbSet.AsNoTracking().FirstOrDefaultAsync(e => e.Id.Equals(entityId));
         }
@@ -82,6 +66,38 @@ namespace CursoAngular.DAL.Repositories.Generics
             }
 
             _dbSet.Entry(entity).State = EntityState.Modified;
+        }
+
+        public Task<List<TEntity>> Get()
+        {
+            var result = _entities.ToListAsync();
+            _entities = _dbSet.AsNoTracking();
+
+            return result;
+        }
+
+        public IGenericRepository<TEntity> Filter(Expression<Func<TEntity, bool>> expression)
+        {
+            _entities = _entities.Where(expression);
+            return this;
+        }
+
+        public IGenericRepository<TEntity> Order<TKey>(Expression<Func<TEntity, TKey>> expression)
+        {
+            _entities = _entities.OrderBy(expression);
+            return this;
+        }
+
+        public IGenericRepository<TEntity> Take(int count)
+        {
+            _entities = _entities.Take(count);
+            return this;
+        }
+
+        public IGenericRepository<TEntity> Skip(int count)
+        {
+            _entities = _entities.Skip(count);
+            return this;
         }
     }
 }

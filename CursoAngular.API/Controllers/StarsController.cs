@@ -30,7 +30,7 @@ namespace CursoAngular.API.Controllers
         {
             try
             {
-                var stars = await _unitOfWork.Repository<StarEntity>().Get(pagination.GetSkipCount(), pagination.ItemsToDisplay, e => e.Name);
+                var stars = await _unitOfWork.Repository<StarEntity>().Order(x => x.Name).Skip(pagination.GetSkipCount()).Take(pagination.ItemsToDisplay).Get();
 
                 if (stars.Count <= 0)
                 {
@@ -56,7 +56,7 @@ namespace CursoAngular.API.Controllers
         {
             try
             {
-                var star = await _unitOfWork.Repository<StarEntity>().GetById(id);
+                var star = await _unitOfWork.Repository<StarEntity>().Get(id);
 
                 if (star == null)
                 {
@@ -66,6 +66,29 @@ namespace CursoAngular.API.Controllers
                 var result = _mapper.Map<StarDTO>(star);
 
                 return result;
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET api/<StarsController>/{name}
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<SearchStarDTO>>> Get(string name)
+        {
+            try
+            {
+                var stars = await _unitOfWork.StarsRepository.GetByName(name);
+
+                if (stars.Count <= 0)
+                {
+                    return NoContent();
+                }
+
+                var results = _mapper.Map<List<SearchStarDTO>>(stars);
+
+                return results;
             }
             catch (Exception)
             {
@@ -107,7 +130,7 @@ namespace CursoAngular.API.Controllers
         {
             try
             {
-                var star = await _unitOfWork.Repository<StarEntity>().GetById(id);
+                var star = await _unitOfWork.Repository<StarEntity>().Get(id);
 
                 if (star == null)
                 {
