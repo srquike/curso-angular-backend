@@ -7,9 +7,12 @@ using CursoAngular.DAL.UnitOfWork;
 using CursoAngular.Repository.Files;
 using CursoAngular.UOW;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
+using System.Text;
 
 namespace CursoAngular.API
 {
@@ -30,7 +33,28 @@ namespace CursoAngular.API
                         .WithExposedHeaders(new string[] { "itemsCount" });
                 });
             });
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ ";
+                options.User.RequireUniqueEmail = true;
+            });
+
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CursoAngularDbContext>().AddDefaultTokenProviders();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                new TokenValidationParameters()
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Keys:Jwt"])),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
             builder.Services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(ExceptionLoggerFilter));
@@ -38,6 +62,7 @@ namespace CursoAngular.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddDbContext<CursoAngularDbContext>(options =>
             {
                 options.EnableSensitiveDataLogging().UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider =>
@@ -46,6 +71,7 @@ namespace CursoAngular.API
                     provider.UseNetTopologySuite();
                 });
             });
+
             builder.Services.AddSingleton(NtsGeometryServices.Instance.CreateGeometryFactory(4326));
 
             builder.Services.AddAutoMapper(typeof(Program));

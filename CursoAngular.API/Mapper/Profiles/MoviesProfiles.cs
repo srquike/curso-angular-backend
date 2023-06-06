@@ -21,7 +21,7 @@ namespace CursoAngular.API.Mapper.Profiles
 
             // DTO to Entity
             CreateMap<MovieDTO, MovieEntity>();
-            CreateMap<FormDTO, MovieEntity>()
+            CreateMap<FormMovieDTO, MovieEntity>()
                 .ForMember(d => d.PosterUrl, options => options.Ignore())
                 .ForMember(d => d.Casting, options => options.MapFrom(GetStarMovieMapping))
                 .ForMember(d => d.GenreMovies, options => options.MapFrom(GetGenreMovieMapping))
@@ -73,13 +73,13 @@ namespace CursoAngular.API.Mapper.Profiles
             return results;
         }
 
-        private List<CastEntity> GetStarMovieMapping(FormDTO dTO, MovieEntity entity)
+        private List<CastEntity> GetStarMovieMapping(FormMovieDTO dTO, MovieEntity entity)
         {
             var results = new List<CastEntity>();
 
-            if (dTO.Cast != null)
+            if (dTO.Casting != null)
             {
-                foreach (var item in dTO.Cast)
+                foreach (var item in dTO.Casting)
                 {
                     results.Add(new CastEntity()
                     {
@@ -93,7 +93,7 @@ namespace CursoAngular.API.Mapper.Profiles
             return results;
         }
 
-        private List<MovieCinemaEntity> GetCinemaMovieMapping(FormDTO dTO, MovieEntity entity)
+        private List<MovieCinemaEntity> GetCinemaMovieMapping(FormMovieDTO dTO, MovieEntity entity)
         {
             var results = new List<MovieCinemaEntity>();
 
@@ -111,7 +111,7 @@ namespace CursoAngular.API.Mapper.Profiles
             return results;
         }
 
-        private List<GenreMovieEntity> GetGenreMovieMapping(FormDTO dTO, MovieEntity entity)
+        private List<GenreMovieEntity> GetGenreMovieMapping(FormMovieDTO dTO, MovieEntity entity)
         {
             var results = new List<GenreMovieEntity>();
 

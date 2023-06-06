@@ -21,6 +21,7 @@ namespace CursoAngular.API.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        // With pagination
         // GET: api/<GenresController>
         [HttpGet]
         public async Task<ActionResult<List<GenreDTO>>> Get([FromQuery] Pagination pagination)
@@ -38,6 +39,29 @@ namespace CursoAngular.API.Controllers
                 var results = _mapper.Map<List<GenreDTO>>(genres);
 
                 HttpContext.SetPaginationParameters(itemsCount);
+
+                return results;
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+        
+        // GET: api/<GenresController>
+        [HttpGet("all")]
+        public async Task<ActionResult<List<GenreDTO>>> Get()
+        {
+            try
+            {
+                var genres = await _unitOfWork.Repository<GenreEntity>().Get();
+
+                if (genres.Count <= 0)
+                {
+                    return NoContent();
+                }
+
+                var results = _mapper.Map<List<GenreDTO>>(genres);
 
                 return results;
             }

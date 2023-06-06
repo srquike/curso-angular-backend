@@ -1,10 +1,13 @@
 ﻿using CursoAngular.DAL.Repositories.Generics;
 using CursoAngular.DAL.Repositories.Movies;
 using CursoAngular.DAL.Repositories.Stars;
+using CursoAngular.DAL.Repositories.Users;
 using CursoAngular.Repository;
 using CursoAngular.Repository.Movies;
 using CursoAngular.Repository.Stars;
+using CursoAngular.Repository.Users;
 using CursoAngular.UOW;
+using Microsoft.AspNetCore.Identity;
 using System.Collections;
 
 namespace CursoAngular.DAL.UnitOfWork
@@ -12,20 +15,26 @@ namespace CursoAngular.DAL.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly CursoAngularDbContext _dbContext;
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
 
         private IStarsRepository? _starsRepository;
         private IMoviesRespository? _moviesRespository;
+        private IUsersRepository? _usersRepository;
 
         private Hashtable? _repositories;
         private bool _dbContextDisposed;
 
         public IStarsRepository StarsRepository => _starsRepository ??= new StarsRepository(_dbContext);
         public IMoviesRespository MoviesRespository => _moviesRespository ??= new MoviesRepository(_dbContext);
+        public IUsersRepository UsersRepository => _usersRepository ??= new UsersRepository(_dbContext, userManager, signInManager);
 
-        public UnitOfWork(CursoAngularDbContext dbContext)
+        public UnitOfWork(CursoAngularDbContext dbContext, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _dbContext = dbContext;
             _dbContextDisposed = false;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         protected virtual void Dispose(bool disposing)

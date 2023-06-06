@@ -8,6 +8,7 @@ using CursoAngular.Repository.Files;
 using CursoAngular.API.DTO.Movies;
 using CursoAngular.API.DTO.Cinemas;
 using CursoAngular.API.DTO;
+using CursoAngular.API.Extensions;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -32,11 +33,43 @@ namespace CursoAngular.API.Controllers
         }
 
         // GET: api/<MoviesController>
-        //[HttpGet]
-        //public async Task<ActionResult<List<MovieDTO>>> Get()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [HttpGet]
+        public async Task<ActionResult<List<MovieDTO>>> Get([FromQuery] FilterDTO filter)
+        {
+            var results = new List<MovieDTO>();
+            var query = _unitOfWork.Repository<MovieEntity>();
+
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                query.Filter(x => x.Title.Contains(filter.Title));
+            }
+
+            if (filter.ComingSoon)
+            {
+                query.Filter(x => x.ReleaseDate > DateTime.Today);
+            }
+            else
+            {
+                query.Filter(x => x.ReleaseDate <= DateTime.Today);
+            }
+
+            if (filter.Genre is not 0)
+            {
+                query.Filter(x => x.GenreMovies.Select(y => y.GenreId).Contains(filter.Genre));
+            }
+
+            query.Skip(filter.Pagination.GetSkipCount()).Take(filter.Pagination.ItemsToDisplay);
+
+            var movies = await query.Get();
+            var itemsCount = await _unitOfWork.Repository<MovieEntity>().GetCount();
+
+            results = _mapper.Map<List<MovieDTO>>(movies);
+
+            HttpContext.SetPaginationParameters(itemsCount);
+
+            return results;
+
+        }
 
         [HttpGet("landing")]
         public async Task<ActionResult<LandingPageDTO>> Get()
@@ -126,7 +159,7 @@ namespace CursoAngular.API.Controllers
 
         // POST api/<MoviesController>
         [HttpPost]
-        public async Task<ActionResult<int>> Post([FromForm] FormDTO movie)
+        public async Task<ActionResult<int>> Post([FromForm] FormMovieDTO movie)
         {
             try
             {
@@ -159,7 +192,7 @@ namespace CursoAngular.API.Controllers
 
         // PUT api/<MoviesController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromForm] FormDTO movieDto)
+        public async Task<IActionResult> Put(int id, [FromForm] FormMovieDTO movieDto)
         {
             try
             {
@@ -201,10 +234,13 @@ namespace CursoAngular.API.Controllers
             {
                 if (await _unitOfWork.Repository<MovieEntity>().Exists(id))
                 {
+                    var movie = await _unitOfWork.Repository<MovieEntity>().Get(id);
+
                     _unitOfWork.Repository<MovieEntity>().Delete(id);
 
                     if (await _unitOfWork.SaveChangesAsync())
                     {
+                        await _filesStorage.DeleteFileAsync(movie.PosterUrl, MOVIES_CONTAINER_NAME);
                         return NoContent();
                     }
 

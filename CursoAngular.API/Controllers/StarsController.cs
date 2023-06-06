@@ -169,10 +169,13 @@ namespace CursoAngular.API.Controllers
             {
                 if (await _unitOfWork.Repository<StarEntity>().Exists(id))
                 {
+                    var star = await _unitOfWork.Repository<StarEntity>().Get(id);
+
                     _unitOfWork.Repository<StarEntity>().Delete(id);
 
                     if (await _unitOfWork.SaveChangesAsync())
                     {
+                        await _filesStorage.DeleteFileAsync(star.PhotographyURL, "Stars");
                         return NoContent();
                     }
 

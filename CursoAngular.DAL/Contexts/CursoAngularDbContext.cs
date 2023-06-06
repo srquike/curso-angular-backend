@@ -1,9 +1,10 @@
 ﻿using CursoAngular.BOL;
 using CursoAngular.BOL.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursoAngular.DAL;
-public class CursoAngularDbContext : DbContext
+public class CursoAngularDbContext : IdentityDbContext
 {
     public virtual DbSet<CinemaEntity> Cinemas { get; set; }
     public virtual DbSet<MovieEntity> Movies { get; set; }
