@@ -13,6 +13,7 @@ public class CursoAngularDbContext : IdentityDbContext
     public virtual DbSet<CastEntity> Cast { get; set; }
     public virtual DbSet<GenreMovieEntity> GenreMovies { get; set; }
     public virtual DbSet<MovieCinemaEntity> MovieCinemas { get; set; }
+    public virtual DbSet<RatingEntity> Ratings { get; set; }
 
     public CursoAngularDbContext(DbContextOptions<CursoAngularDbContext> options) : base(options) { }
 
