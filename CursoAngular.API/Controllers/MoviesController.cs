@@ -9,6 +9,7 @@ using CursoAngular.API.DTO.Movies;
 using CursoAngular.API.DTO.Cinemas;
 using CursoAngular.API.DTO;
 using CursoAngular.API.Extensions;
+using CursoAngular.DAL.UnitOfWork;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,7 +18,7 @@ namespace CursoAngular.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MoviesController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -34,6 +35,7 @@ namespace CursoAngular.API.Controllers
 
         // GET: api/<MoviesController>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<MovieDTO>>> Get([FromQuery] FilterDTO filter)
         {
             var results = new List<MovieDTO>();
@@ -72,6 +74,7 @@ namespace CursoAngular.API.Controllers
         }
 
         [HttpGet("landing")]
+        [AllowAnonymous]
         public async Task<ActionResult<LandingPageDTO>> Get()
         {
             var top = 5;
@@ -91,6 +94,7 @@ namespace CursoAngular.API.Controllers
 
         // GET api/<MoviesController>/5
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<MovieDTO>> Get(int id)
         {
             try
@@ -99,7 +103,28 @@ namespace CursoAngular.API.Controllers
 
                 if (movie != null)
                 {
+                    var scoringAverage = 0.0;
+                    var userScoring = 0;
+
+                    if (HttpContext.User.Identity.IsAuthenticated)
+                    {
+                        var userEmailClaim = HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("email")).Value;
+                        var user = await _unitOfWork.UsersRepository.GetUserAsync(userEmailClaim);
+                        var userRating = await _unitOfWork.RatingsRepository.GetAsync(movie.Id, user.Id);
+
+                        if (userRating is not null)
+                        {
+                            userScoring = userRating.Scoring;
+                        }
+                    }
+
+                    scoringAverage = await _unitOfWork.RatingsRepository.GetAverageAsync(movie.Id);
+
+
                     var result = _mapper.Map<MovieDTO>(movie);
+                    result.UserScoring = userScoring;
+                    result.ScoringAverage = scoringAverage;
+
                     return result;
                 }
 

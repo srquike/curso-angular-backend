@@ -9,5 +9,6 @@ namespace CursoAngular.Repository.Users
         Task<SignInResult> LogInAsync(IdentityUser user, string password);
         Task<IList<Claim>> GetClaimsAsync(IdentityUser user);
         Task<IdentityUser> GetUserAsync(string email);
+        Task<IdentityResult> AddClaimsAsync(IdentityUser user, IEnumerable<Claim> claims);
     }
 }

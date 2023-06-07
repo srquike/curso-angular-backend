@@ -1,9 +1,11 @@
 ﻿using CursoAngular.DAL.Repositories.Generics;
 using CursoAngular.DAL.Repositories.Movies;
+using CursoAngular.DAL.Repositories.Ratings;
 using CursoAngular.DAL.Repositories.Stars;
 using CursoAngular.DAL.Repositories.Users;
 using CursoAngular.Repository;
 using CursoAngular.Repository.Movies;
+using CursoAngular.Repository.Ratings;
 using CursoAngular.Repository.Stars;
 using CursoAngular.Repository.Users;
 using CursoAngular.UOW;
@@ -21,6 +23,7 @@ namespace CursoAngular.DAL.UnitOfWork
         private IStarsRepository? _starsRepository;
         private IMoviesRespository? _moviesRespository;
         private IUsersRepository? _usersRepository;
+        private IRatingsRepository? ratingsRepository;
 
         private Hashtable? _repositories;
         private bool _dbContextDisposed;
@@ -28,6 +31,7 @@ namespace CursoAngular.DAL.UnitOfWork
         public IStarsRepository StarsRepository => _starsRepository ??= new StarsRepository(_dbContext);
         public IMoviesRespository MoviesRespository => _moviesRespository ??= new MoviesRepository(_dbContext);
         public IUsersRepository UsersRepository => _usersRepository ??= new UsersRepository(_dbContext, userManager, signInManager);
+        public IRatingsRepository RatingsRepository => ratingsRepository ??= new RatingsRepository(_dbContext);
 
         public UnitOfWork(CursoAngularDbContext dbContext, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace CursoAngular.API
@@ -42,9 +43,16 @@ namespace CursoAngular.API
 
             builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CursoAngularDbContext>().AddDefaultTokenProviders();
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            builder.Services.AddAuthentication(options =>
             {
-                new TokenValidationParameters()
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+
+                options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuer = false,
                     ValidateAudience = false,
@@ -52,13 +60,19 @@ namespace CursoAngular.API
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Keys:Jwt"])),
                     ClockSkew = TimeSpan.Zero
-                };
+                }
+            );
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("admin", policy => policy.RequireClaim("role", "admin"));
             });
 
             builder.Services.AddControllers(options =>
             {
                 options.Filters.Add(typeof(ExceptionLoggerFilter));
             });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

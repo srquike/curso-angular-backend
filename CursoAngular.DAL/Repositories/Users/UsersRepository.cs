@@ -19,7 +19,8 @@ namespace CursoAngular.DAL.Repositories.Users
 
         public async Task<IdentityResult> SignInAsync(string name, string email, string password)
         {
-            return await userManager.CreateAsync(new IdentityUser() { UserName = name, Email = email }, password);
+            var user = new IdentityUser() { UserName = name, Email = email };
+            return await userManager.CreateAsync(user, password);
         }
 
         public async Task<SignInResult> LogInAsync(IdentityUser user, string password)
@@ -35,6 +36,11 @@ namespace CursoAngular.DAL.Repositories.Users
         public async Task<IList<Claim>> GetClaimsAsync(IdentityUser user)
         {
             return await userManager.GetClaimsAsync(user);
+        }
+
+        public async Task<IdentityResult> AddClaimsAsync(IdentityUser user, IEnumerable<Claim> claims)
+        {
+            return await userManager.AddClaimsAsync(user, claims);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace CursoAngular.API.DTO.Movies
         public string? PosterUrl { get; set; }
         public string? TrailerUrl { get; set; }
         public string? MpaaRating { get; set; }
+        public int UserScoring { get; set; }
+        public double ScoringAverage { get; set; }
 
         public List<GenreDTO>? Genres { get; set; }
         public List<CastDTO>? Cast { get; set; }

@@ -50,13 +50,25 @@ namespace CursoAngular.API.Controllers
 
                 if (result.Succeeded)
                 {
+                    var user = await unitOfWork.UsersRepository.GetUserAsync(signIn.Email);
+
+
                     var claims = new List<Claim>()
                     {
                         new Claim("email", signIn.Email),
-                        new Claim("name", signIn.Name)
+                        new Claim("name", signIn.Name),
+                        new Claim("role", "guest")
                     };
 
-                    return GenerateToken(claims);
+                    var claimsResult = await unitOfWork.UsersRepository.AddClaimsAsync(user, claims);
+
+                    if (claimsResult.Succeeded)
+                    {
+                        return GenerateToken(claims);
+                    }
+
+                    return BadRequest(claimsResult.Errors);
+
                 }
 
                 return BadRequest(result.Errors);

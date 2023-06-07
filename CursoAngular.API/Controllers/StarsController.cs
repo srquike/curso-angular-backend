@@ -5,12 +5,15 @@ using CursoAngular.API.Tools;
 using CursoAngular.BOL;
 using CursoAngular.Repository.Files;
 using CursoAngular.UOW;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CursoAngular.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "admin")]
     public class StarsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
