@@ -3,6 +3,7 @@ using System;
 using CursoAngular.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CursoAngular.DAL.Migrations
 {
     [DbContext(typeof(CursoAngularDbContext))]
-    partial class CursoAngularDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230924231021_CambiarTipoFecha")]
+    partial class CambiarTipoFecha
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
