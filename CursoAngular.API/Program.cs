@@ -24,6 +24,7 @@ namespace CursoAngular.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(corsbuilder =>
@@ -58,7 +59,7 @@ namespace CursoAngular.API
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Keys:Jwt"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"])),
                     ClockSkew = TimeSpan.Zero
                 }
             );
@@ -83,17 +84,14 @@ namespace CursoAngular.API
                 {
                     provider.EnableRetryOnFailure();
                     provider.UseNetTopologySuite();
-                });
+                }).;
             });
 
             builder.Services.AddSingleton(NtsGeometryServices.Instance.CreateGeometryFactory(4326));
 
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddTransient<IFilesStorageRepository, FilesStorageRepository>(_ =>
-            {
-                return new FilesStorageRepository(builder.Configuration["ConnectionStrings:AzureBlobStorage"]);
-            });
+            builder.Services.AddTransient<IFilesStorageRepository, LocalFileStorageRepository>();
             builder.Services.AddSingleton(provider =>
 
                 new MapperConfiguration(configuration =>
@@ -122,6 +120,8 @@ namespace CursoAngular.API
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseStaticFiles();
 
             app.MapControllers();
 

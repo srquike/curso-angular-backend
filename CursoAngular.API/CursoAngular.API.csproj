@@ -29,4 +29,8 @@
     <ProjectReference Include="..\CursoAngular.DAL\CursoAngular.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>
