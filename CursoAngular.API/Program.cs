@@ -79,7 +79,7 @@ namespace CursoAngular.API
 
             builder.Services.AddDbContext<CursoAngularDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging().UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider =>
+                options.EnableSensitiveDataLogging().UseNpgsql("Name=ConnectionStrings:CursoAngularDb", provider =>
                 {
                     provider.EnableRetryOnFailure();
                     provider.UseNetTopologySuite();
