@@ -28,7 +28,7 @@ namespace CursoAngular.API
             {
                 options.AddDefaultPolicy(corsbuilder =>
                 {
-                    corsbuilder.WithOrigins(builder.Configuration.GetValue<string>("Clients"))
+                    corsbuilder.WithOrigins("http://localhost:4200")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .WithExposedHeaders(new string[] { "itemsCount" });
@@ -79,7 +79,7 @@ namespace CursoAngular.API
 
             builder.Services.AddDbContext<CursoAngularDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging().UseNpgsql("Name=ConnectionStrings:CursoAngularDb", provider =>
+                options.EnableSensitiveDataLogging().UseNpgsql(builder.Configuration.GetConnectionString("CursoAngularDb"), provider =>
                 {
                     provider.EnableRetryOnFailure();
                     provider.UseNetTopologySuite();
