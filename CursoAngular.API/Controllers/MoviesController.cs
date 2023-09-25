@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
+using CursoAngular.API.DTO;
+using CursoAngular.API.DTO.Cinemas;
+using CursoAngular.API.DTO.Movies;
+using CursoAngular.API.Extensions;
 using CursoAngular.BOL;
+using CursoAngular.Repository.Files;
 using CursoAngular.UOW;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CursoAngular.Repository.Files;
-using CursoAngular.API.DTO.Movies;
-using CursoAngular.API.DTO.Cinemas;
-using CursoAngular.API.DTO;
-using CursoAngular.API.Extensions;
-using CursoAngular.DAL.UnitOfWork;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -168,6 +167,7 @@ namespace CursoAngular.API.Controllers
         }
 
         [HttpGet("resources")]
+        [AllowAnonymous]
         public async Task<ActionResult<MovieResourcesDTO>> GetResources()
         {
             var cinemas = await _unitOfWork.Repository<CinemaEntity>().Order(x => x.Name).Get();

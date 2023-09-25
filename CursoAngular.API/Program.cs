@@ -13,24 +13,29 @@ using Microsoft.IdentityModel.Tokens;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace CursoAngular.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(corsbuilder =>
                 {
-                    corsbuilder.WithOrigins(builder.Configuration.GetValue<string>("Clients"))
+                    corsbuilder.WithOrigins("http://localhost:4200, https://proyecto2.jonathanvanegas.com")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
+                        .SetIsOriginAllowed(allowed => true)
                         .WithExposedHeaders(new string[] { "itemsCount" });
                 });
             });
@@ -58,7 +63,7 @@ namespace CursoAngular.API
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Keys:Jwt"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"])),
                     ClockSkew = TimeSpan.Zero
                 }
             );
@@ -79,7 +84,7 @@ namespace CursoAngular.API
 
             builder.Services.AddDbContext<CursoAngularDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging().UseSqlServer("Name=ConnectionStrings:CursoAngularDb", provider =>
+                options.EnableSensitiveDataLogging().UseNpgsql(builder.Configuration.GetConnectionString("CursoAngularDb"), provider =>
                 {
                     provider.EnableRetryOnFailure();
                     provider.UseNetTopologySuite();
@@ -90,10 +95,7 @@ namespace CursoAngular.API
 
             builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddTransient<IFilesStorageRepository, FilesStorageRepository>(_ =>
-            {
-                return new FilesStorageRepository(builder.Configuration["ConnectionStrings:AzureBlobStorage"]);
-            });
+            builder.Services.AddTransient<IFilesStorageRepository, LocalFileStorageRepository>();
             builder.Services.AddSingleton(provider =>
 
                 new MapperConfiguration(configuration =>
@@ -123,9 +125,82 @@ namespace CursoAngular.API
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
+
             app.MapControllers();
 
+            using (var scope = app.Services.CreateAsyncScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<CursoAngularDbContext>();
+                db.Database.Migrate();
+
+                var userManager = (UserManager<IdentityUser>)scope.ServiceProvider.GetService(typeof(UserManager<IdentityUser>));
+                var roleManager = (RoleManager<IdentityRole>)scope.ServiceProvider.GetService(typeof(RoleManager<IdentityRole>));
+
+                await DataInitializer.SeedData(userManager, roleManager);
+            }
+
             app.Run();
+        }
+    }
+
+    internal class DataInitializer
+    {
+        internal static async Task SeedData(UserManager<IdentityUser>? userManager, RoleManager<IdentityRole>? roleManager)
+        {
+            await SeedRole(roleManager);
+            await SeedUser(userManager);
+        }
+
+        private static async Task SeedUser(UserManager<IdentityUser>? userManager)
+        {
+            var findedUser = await userManager.FindByNameAsync("Administrator");
+
+            if (findedUser is null)
+            {
+                var newUser = new IdentityUser()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = "Administrator",
+                    Email = "administrator@starflix.com"
+                };
+
+                var result = await userManager.CreateAsync(newUser, "Administrator1!");
+
+                if (result.Succeeded)
+                {
+                    var roleResult = await userManager.AddToRoleAsync(newUser, "Administrator");
+
+                    if (roleResult.Succeeded)
+                    {
+                        var claims = new List<Claim>()
+                        {
+                            new Claim("email", newUser.Email),
+                            new Claim("name", newUser.UserName),
+                            new Claim("role", "Administrator")
+                        };
+
+                        await userManager.AddClaimsAsync(newUser, claims);
+                    }
+                }
+            }
+        }
+
+        private static async Task SeedRole(RoleManager<IdentityRole>? roleManager)
+        {
+            var findedRole = await roleManager.FindByNameAsync("Administrator");
+
+            if (findedRole is null)
+            {
+                var newRole = new IdentityRole()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "Administrator",
+                    NormalizedName = "ADMINISTRATOR"
+                };
+
+                await roleManager.CreateAsync(newRole);
+            }
         }
     }
 }

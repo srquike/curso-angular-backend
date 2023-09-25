@@ -22,7 +22,12 @@ namespace CursoAngular.DAL.Repositories.Ratings
 
         public async Task<double> GetAverageAsync(int movieId)
         {
-            return await context.Ratings.Where(x => x.MovieId.Equals(movieId)).AverageAsync(x => x.Scoring);
+            if (await context.Ratings.Where(x => x.MovieId.Equals(movieId)).AnyAsync())
+            {
+                return await context.Ratings.Where(x => x.MovieId.Equals(movieId)).AverageAsync(x => x.Scoring);
+            }
+
+            return 0;
         }
     }
 }
