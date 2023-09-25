@@ -32,9 +32,10 @@ namespace CursoAngular.API
             {
                 options.AddDefaultPolicy(corsbuilder =>
                 {
-                    corsbuilder.WithOrigins("http://localhost:4200")
+                    corsbuilder.WithOrigins("http://localhost:4200, https://proyecto2.jonathanvanegas.com")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
+                        .SetIsOriginAllowed(allowed => true)
                         .WithExposedHeaders(new string[] { "itemsCount" });
                 });
             });
